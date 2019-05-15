@@ -100,7 +100,7 @@ accurate_delay(int ticks)
 
     if (!SDL_WasInit(SDL_INIT_TIMER)) {
         if (SDL_InitSubSystem(SDL_INIT_TIMER)) {
-            RAISE(pgExc_SDLError, SDL_GetError());
+            PyErr_SetString(pgExc_SDLError, SDL_GetError());
             return -1;
         }
     }
@@ -167,8 +167,7 @@ time_wait(PyObject *self, PyObject *arg)
 
     if (!SDL_WasInit(SDL_INIT_TIMER)) {
         if (SDL_InitSubSystem(SDL_INIT_TIMER)) {
-            RAISE(pgExc_SDLError, SDL_GetError());
-            return NULL;
+            return RAISE(pgExc_SDLError, SDL_GetError());
         }
     }
 
@@ -287,8 +286,7 @@ clock_tick_base(PyObject *self, PyObject *arg, int use_accurate_delay)
         /*just doublecheck that timer is initialized*/
         if (!SDL_WasInit(SDL_INIT_TIMER)) {
             if (SDL_InitSubSystem(SDL_INIT_TIMER)) {
-                RAISE(pgExc_SDLError, SDL_GetError());
-                return NULL;
+                return RAISE(pgExc_SDLError, SDL_GetError());
             }
         }
 
