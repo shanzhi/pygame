@@ -9,17 +9,17 @@ follow along in the tutorial.
 
 # Import Modules
 import os, pygame
-from pygame.locals import *
-from pygame.compat import geterror
+from pygame.locals import *#地方
+from pygame.compat import geterror#同胞
 
 if not pygame.font: print('Warning, fonts disabled')
 if not pygame.mixer: print('Warning, sound disabled')
 
-main_dir = os.path.split(os.path.abspath(__file__))[0]
+main_dir = os.path.split(os.path.abspath(__file__))[0]#分开
 data_dir = os.path.join(main_dir, 'data')
 
 
-# functions to create our resources
+# functions to create our resources资源
 def load_image(name, colorkey=None):
     fullname = os.path.join(data_dir, name)
     try:
@@ -27,7 +27,7 @@ def load_image(name, colorkey=None):
     except pygame.error:
         print('Cannot load image:', fullname)
         raise SystemExit(str(geterror()))
-    image = image.convert()
+    image = image.convert()#转换
     if colorkey is not None:
         if colorkey is -1:
             colorkey = image.get_at((0, 0))
@@ -64,11 +64,11 @@ class Fist(pygame.sprite.Sprite):
         if self.punching:
             self.rect.move_ip(5, 10)
 
-    def punch(self, target):
+    def punch(self, target):#打孔
         """returns true if the fist collides with the target"""
         if not self.punching:
             self.punching = 1
-            hitbox = self.rect.inflate(-5, -5)
+            hitbox = self.rect.inflate(-5, -5)#使充气
             return hitbox.colliderect(target.rect)
 
     def unpunch(self):
@@ -83,15 +83,15 @@ class Chimp(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)  # call Sprite intializer
         self.image, self.rect = load_image('chimp.bmp', -1)
         screen = pygame.display.get_surface()
-        self.area = screen.get_rect()
+        self.area = screen.get_rect()#地区
         self.rect.topleft = 10, 10
         self.move = 9
-        self.dizzy = 0
+        self.dizzy = 0#头晕的
 
     def update(self):
         """walk or spin, depending on the monkeys state"""
         if self.dizzy:
-            self._spin()
+            self._spin()#快转
         else:
             self._walk()
 
@@ -103,7 +103,7 @@ class Chimp(pygame.sprite.Sprite):
                     self.rect.right > self.area.right:
                 self.move = -self.move
                 newpos = self.rect.move((self.move, 0))
-                self.image = pygame.transform.flip(self.image, 1, 0)
+                self.image = pygame.transform.flip(self.image, 1, 0)#使改变
             self.rect = newpos
 
     def _spin(self):
@@ -112,9 +112,9 @@ class Chimp(pygame.sprite.Sprite):
         self.dizzy = self.dizzy + 12
         if self.dizzy >= 360:
             self.dizzy = 0
-            self.image = self.original
+            self.image = self.original#起初
         else:
-            rotate = pygame.transform.rotate
+            rotate = pygame.transform.rotate#旋转
             self.image = rotate(self.original, self.dizzy)
         self.rect = self.image.get_rect(center=center)
 
@@ -143,7 +143,7 @@ def main():
     # Put Text On The Background, Centered
     if pygame.font:
         font = pygame.font.Font(None, 36)
-        text = font.render("Pummel The Chimp, And Win $$$", 1, (10, 10, 10))
+        text = font.render("Pummel The Chimp, And Win $$$", 1, (10, 10, 10))#提供
         textpos = text.get_rect(centerx=background.get_width()/2)
         background.blit(text, textpos)
 
@@ -153,16 +153,16 @@ def main():
 
     # Prepare Game Objects
     clock = pygame.time.Clock()
-    whiff_sound = load_sound('whiff.wav')
+    whiff_sound = load_sound('whiff.wav')#挥动
     punch_sound = load_sound('punch.wav')
     chimp = Chimp()
     fist = Fist()
-    allsprites = pygame.sprite.RenderPlain((fist, chimp))
+    allsprites = pygame.sprite.RenderPlain((fist, chimp))#渲染平面 精灵
 
     # Main Loop
     going = True
     while going:
-        clock.tick(60)
+        clock.tick(60)#滴答
 
         # Handle Input Events
         for event in pygame.event.get():
